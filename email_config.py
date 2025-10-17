@@ -5,9 +5,9 @@ from typing import Dict, Any
 EMAIL_CONFIG = {
     "smtp_server": os.getenv("SMTP_SERVER", "smtp.gmail.com"),
     "smtp_port": int(os.getenv("SMTP_PORT", "587")),
-    "email_user": os.getenv("EMAIL_USER", "hajarelaouni43@gmail.com"),
-    "email_password": os.getenv("EMAIL_PASSWORD", "rtsa ynab dwfi leso"),
-    "team_email": os.getenv("TEAM_EMAIL", "hajarelaouni2001@gmail.com"),
+    "email_user": os.getenv("EMAIL_USER", "votre email"),
+    "email_password": os.getenv("EMAIL_PASSWORD", "mot de passe"),
+    "team_email": os.getenv("TEAM_EMAIL", "equipe email"),
     "use_tls": True
 }
 
