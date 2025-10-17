@@ -302,7 +302,7 @@ def evaluate_qualification_score(client_info: dict, answers: dict) -> tuple[str,
     """
     
     
-    API_KEY = "AIzaSyALngayFjP-pXf02p-gKj0lWWtWAHkyWMo" 
+    API_KEY = "votre cle api" 
     genai.configure(api_key=API_KEY)
     
     
