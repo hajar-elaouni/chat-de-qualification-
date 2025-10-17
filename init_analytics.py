@@ -16,13 +16,13 @@ def main():
         return False
     
     try:
-        # Créer les tables (y compris les nouvelles tables analytics)
+       
         if db.create_tables():
             print("✅ Tables analytics créées avec succès !")
             
-            # Insérer quelques données d'exemple pour les analytics
+         
             print("📊 Insertion de données d'exemple...")
-            # Les données d'exemple seront ajoutées automatiquement lors des premières utilisations
+         
             
             print("🎉 Initialisation terminée !")
             print("\n📋 Tables créées :")

@@ -34,7 +34,7 @@ def test_email_config():
     """Test de la configuration email"""
     print("🧪 Test de la configuration email...")
     
-    # Vérifier les variables d'environnement
+   
     required_vars = ["EMAIL_USER", "EMAIL_PASSWORD", "TEAM_EMAIL"]
     missing_vars = []
     
@@ -58,7 +58,7 @@ def test_email_service():
         print("⚠️ Impossible de tester le service email sans configuration")
         return False
     
-    # Données de test
+    
     client_info = {
         "nom": "Dupont",
         "prenom": "Jean",
@@ -90,13 +90,13 @@ def main():
     """Fonction principale de test"""
     print("🚀 Test de la fonctionnalité d'envoi d'email - Dream Pastry\n")
     
-    # Test 1: Détection d'intention
+  
     test_detection_intent()
     
-    # Test 2: Configuration email
+
     config_ok = test_email_config()
     
-    # Test 3: Service email (seulement si config OK)
+ 
     if config_ok:
         test_email_service()
     else:

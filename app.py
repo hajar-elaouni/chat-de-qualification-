@@ -9,7 +9,7 @@ from llm import getChatChain
 
 
 def main(llm_model_name: str, embedding_model_name: str, documents_path: str) -> None:
-    # Check to see if the models available, if not attempt to pull them
+   
     try:
         check_if_model_is_available(llm_model_name)
         check_if_model_is_available(embedding_model_name)
@@ -17,7 +17,7 @@ def main(llm_model_name: str, embedding_model_name: str, documents_path: str) ->
         print(e)
         sys.exit()
 
-    # Creating database form documents
+   
     try:
         db = load_documents_into_database(embedding_model_name, documents_path)
     except FileNotFoundError as e:

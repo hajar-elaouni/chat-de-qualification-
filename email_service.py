@@ -118,7 +118,7 @@ def send_inscription_notification(client_info: Dict[str, Any], formation_details
     return email_service.send_inscription_email(client_info, formation_details)
 
 
-# Dans email_service.py - à ajouter
+
 def send_client_notification(client_info: dict, status: str, formation_details: str = ""):
     """
     Envoie un email de notification au client selon son statut de qualification
@@ -129,20 +129,20 @@ def send_client_notification(client_info: dict, status: str, formation_details: 
         formation_details: Détails de la formation et du créneau choisi
     """
     try:
-        # Configuration SMTP (même que pour l'équipe)
+     
         smtp_server = "smtp.gmail.com"
         smtp_port = 587
-        sender_email = "hajarelaouni43@gmail.com"  # À configurer
-        sender_password = "rtsa ynab dwfi leso"  # À configurer
+        sender_email = "hajarelaouni43@gmail.com"  
+        sender_password = "rtsa ynab dwfi leso"  
         
         
-        # Destinataire
+       
         recipient_email = client_info.get('email', '')
         if not recipient_email:
             print("❌ Aucun email client fourni")
             return False
         
-        # Contenu selon le statut
+        
         if status == "QUALIFIÉ":
             subject = "🎉 Félicitations ! Votre qualification Dream Pastry"
             body = f"""
@@ -219,7 +219,7 @@ L'équipe Dream Pastry
 📞 01 23 45 67 89
             """
         
-        # Envoi de l'email
+       
         msg = MIMEMultipart()
         msg['From'] = sender_email
         msg['To'] = recipient_email

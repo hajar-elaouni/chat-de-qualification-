@@ -179,12 +179,12 @@ def track_unanswered_question(question: str):
 
 
 def get_fallback_answer(question):
-    # Recherche simple par mot-clé ou question exacte
+    
     for key, value in fallback_answers.items():
         if key.lower() in question.lower():
             return value
     
-    # Si aucune réponse trouvée, tracker la question non répondue
+    
     track_unanswered_question(question)
     return None
 
@@ -198,7 +198,7 @@ def detect_inscription_intent(question: str) -> bool:
     Returns:
         bool: True si une intention d'inscription est détectée
     """
-    # Mots-clés et expressions indiquant une intention d'inscription
+    
     inscription_keywords = [
         r'\binscrire\b', r'\binscription\b', r'\bs\'inscrire\b',
         r'\bparticiper\b', r'\bparticiper à\b', r'\bsuivre\b',
@@ -241,12 +241,10 @@ def generate_qualification_questions(client_info: dict, formation_choisie: str =
             db.disconnect()
 
             if sessions:
-                # Mémoriser les options pour la suite (validation de la réponse utilisateur)
-                # Note: cette fonction est rarement utilisée dans le flux actuel, mais on
-                # s'assure d'écrire dans l'état global Streamlit si elle est appelée.
+                
                 st.session_state["sessions_options"] = sessions
                 st.session_state["slot_required"] = True
-                # Construire la question avec options numérotées
+                
                 lines = [f"Créneaux disponibles pour « {formation_choisie} »:"]
                 for i, s in enumerate(sessions, 1):
                     lines.append(f"{i}. {_format_session(s)}")
@@ -258,7 +256,7 @@ def generate_qualification_questions(client_info: dict, formation_choisie: str =
         else:
             questions.append("Problème de connexion. Indiquez tout de même vos disponibilités (jours/heures).")
 
-    # — Questions communes (inchangées) —
+    
     questions.append("Avez-vous déjà une expérience en pâtisserie ? (Débutant/Intermédiaire/Avancé)")
     questions.append("Quel est votre objectif principal ? (Reconversion professionnelle/Perfectionnement/Passion personnelle)")
 
@@ -303,11 +301,11 @@ def evaluate_qualification_score(client_info: dict, answers: dict) -> tuple[str,
         tuple: (statut_qualification, score, justification)
     """
     
-    # Configure l'API Gemini
+    
     API_KEY = "AIzaSyALngayFjP-pXf02p-gKj0lWWtWAHkyWMo" 
     genai.configure(api_key=API_KEY)
     
-    # Construire le prompt avec toutes les informations
+    
     prompt = f"""
     Tu es un expert en qualification de prospects pour Dream Pastry, une école de pâtisserie.
 
@@ -324,7 +322,7 @@ def evaluate_qualification_score(client_info: dict, answers: dict) -> tuple[str,
     **RÉPONSES AUX QUESTIONS DE QUALIFICATION:**
     """
     
-    # Ajouter toutes les réponses
+    
     for q, a in answers.items():
         prompt += f"- {q}: {a}\n"
         
@@ -379,10 +377,10 @@ def evaluate_qualification_score(client_info: dict, answers: dict) -> tuple[str,
         model = genai.GenerativeModel("gemini-2.0-flash")
         response = model.generate_content(prompt)
         
-        # Parser la réponse de Gemini
+        
         response_text = response.text
         
-        # Extraire la catégorie
+        
         if "QUALIFIÉ" in response_text:
             statut_qualification = "QUALIFIÉ"
         elif "LISTE D'ATTENTE" in response_text:
@@ -390,19 +388,19 @@ def evaluate_qualification_score(client_info: dict, answers: dict) -> tuple[str,
         else:
             statut_qualification = "REFUSÉ"
         
-        # Extraire le score (cherche "SCORE: X/100")
+        
         import re
         score_match = re.search(r'SCORE:\s*(\d+)/100', response_text)
         score = int(score_match.group(1)) if score_match else 0
         
-        # La justification est le texte complet
+        
         justification_finale = response_text
     
         return statut_qualification, score, justification_finale
         
     except Exception as e:
         print(f"Erreur lors de l'appel à Gemini: {e}")
-        # Fallback en cas d'erreur
+        
         return "REFUSÉ", 0, f"Erreur lors de l'évaluation: {str(e)}"
 
 
@@ -419,13 +417,13 @@ def check_client_eligibility(client_info: dict) -> tuple[bool, list[str], str]:
     criteres_non_respectes = []
     messages_explicatifs = []
     
-    # Conditions CPF
+    
     age_min = 16
     age_max = 65
     statuts_eligibles = ["Salarié", "Demandeur d'emploi", "Indépendant"]
     budget_min = 500
     
-    # Vérification de l'âge
+    
     age = client_info.get('age', 0)
     if age < age_min:
         criteres_non_respectes.append("âge minimum")
@@ -434,19 +432,19 @@ def check_client_eligibility(client_info: dict) -> tuple[bool, list[str], str]:
         criteres_non_respectes.append("âge maximum")
         messages_explicatifs.append(f"L'âge maximum pour le CPF est de {age_max} ans")
     
-    # Vérification du statut
+    
     statut = client_info.get('statut', '')
     if statut not in statuts_eligibles:
         criteres_non_respectes.append("statut professionnel")
         messages_explicatifs.append(f"Le statut '{statut}' peut limiter les possibilités de financement")
     
-    # Vérification du budget
+    
     budget = client_info.get('budget', 0)
     if budget < budget_min:
         criteres_non_respectes.append("budget insuffisant")
         messages_explicatifs.append(f"Un budget minimum de {budget_min}€ est recommandé pour les formations")
     
-    # Vérification du CPF
+    
     cpf_status = client_info.get('cpf', '')
     if cpf_status == "Non":
         criteres_non_respectes.append("CPF inactif")
@@ -474,10 +472,10 @@ def generate_cpf_discussion(client_info: dict, criteres_non_respectes: list[str]
     
     discussion_parts = []
     
-    # Introduction informative
+    
     discussion_parts.append("💡 **Informations sur le financement CPF :**")
     
-    # Discussion selon le statut CPF
+    
     if cpf_status == "Oui":
         discussion_parts.append("✅ Votre CPF est actif, ce qui ouvre des possibilités de financement.")
         discussion_parts.append("📋 **Possibilités de prise en charge selon votre profil :**")
@@ -511,7 +509,7 @@ def generate_cpf_discussion(client_info: dict, criteres_non_respectes: list[str]
         discussion_parts.append("• Formation en alternance (sous conditions)")
         discussion_parts.append("• Autres dispositifs selon votre situation")
     
-    # Garde-fous et avertissements
+    
     discussion_parts.append("\n⚠️ **IMPORTANT - GARDE-FOUS OBLIGATOIRES :**")
     discussion_parts.append("• Les informations données sont à titre INFORMATIF UNIQUEMENT")
     discussion_parts.append("• Aucune promesse de financement n'est garantie")
@@ -521,14 +519,14 @@ def generate_cpf_discussion(client_info: dict, criteres_non_respectes: list[str]
     discussion_parts.append("• Les conditions CPF sont soumises à la réglementation en vigueur")
     discussion_parts.append("• Consultez les conditions officielles sur moncompteformation.gouv.fr")
     
-    # Message sur les critères non respectés
+    
     if criteres_non_respectes:
         discussion_parts.append(f"\n🔍 **Points d'attention identifiés :**")
         for critere in criteres_non_respectes:
             discussion_parts.append(f"• {critere.replace('_', ' ').title()}")
         discussion_parts.append("• Ces points seront étudiés lors de l'entretien personnalisé")
     
-    # Conclusion
+    
     discussion_parts.append("\n📞 **Prochaines étapes :**")
     discussion_parts.append("• Notre équipe vous contactera pour un entretien personnalisé")
     discussion_parts.append("• Analyse détaillée de votre situation et de vos besoins")
@@ -549,7 +547,7 @@ def detect_formation_interest(question: str, chat_history: list = None) -> str:
     Returns:
         str: Formation détectée ou "Non spécifiée"
     """
-    # Liste des formations Dream Pastry
+    
     formations = [
         "pâtisserie française", "pâtisserie", "capcakes", "cookies", "macarons", "Cap Blanc",
         "croissant", "pain", "viennoiserie", "chocolat", "entremet", "fraisier", "Tablette chocolat Dubai",
@@ -557,13 +555,13 @@ def detect_formation_interest(question: str, chat_history: list = None) -> str:
         "cap pâtissier", "formation pâtisserie", "apprentissage pâtisserie"
     ]
     
-    # Recherche dans la question actuelle
+    
     question_lower = question.lower()
     for formation in formations:
         if formation in question_lower:
             return formation.title()
     
-    # Recherche dans l'historique de chat si disponible
+    
     if chat_history:
         for message in chat_history:
             if isinstance(message, dict) and message.get("role") == "user":
@@ -587,10 +585,10 @@ def process_inscription_request(client_info: dict, question: str, response: str)
         tuple: (message_final, email_envoye)
     """
     if detect_inscription_intent(question):
-        # Préparer les détails de la formation
+        
         formation_details = f"Question du client: {question}\n\nRéponse fournie: {response}"
         
-        # Envoyer l'email à l'équipe
+        
         email_sent = send_inscription_notification(client_info, formation_details)
         
         if email_sent:
@@ -620,19 +618,19 @@ def getChatChain(llm, db):
         | (lambda x: x.content if hasattr(x, "content") else x)
     }
 
-    # Now we retrieve the documents
+    
     retrieved_documents = {
         "docs": itemgetter("standalone_question") | retriever,
         "question": lambda x: x["standalone_question"],
     }
 
-    # Now we construct the inputs for the final prompt
+    
     final_inputs = {
         "context": lambda x: _combine_documents(x["docs"]),
         "question": itemgetter("question"),
     }
 
-    # And finally, we do the part that returns the answers
+    
     answer = {
         "answer": final_inputs
         | ANSWER_PROMPT
@@ -663,7 +661,7 @@ def process_qualification_flow(client_info: dict, question: str, response: str, 
         loc = f" - {sess['location']}" if sess.get("location") else ""
         return f"{sd.strftime('%d/%m %H:%M')} → {ed.strftime('%H:%M')}{label}{loc}"
 
-    # Init état
+    
     if "qualification_in_progress" not in session_state:
         session_state["qualification_in_progress"] = False
         session_state["qualification_questions"] = []
@@ -675,20 +673,20 @@ def process_qualification_flow(client_info: dict, question: str, response: str, 
         session_state["slot_required"] = False
         session_state["refuse_no_slot"] = False
 
-    # Démarrage du flux
+    
     if not session_state["qualification_in_progress"]:
         session_state["qualification_in_progress"] = True
 
-        # Analytics start
+        
         start_analytics_tracking(client_info)
         log_analytics_event("qualification", {"action": "start", "client_info": client_info})
 
-        # 1ère question: formation
+        
         questions = [
             "Quelle formation vous intéresse le plus ? (Pâtisserie française/Macaron/Chocolat/Entremet/CAP Pâtissier/Autre)"
         ]
 
-        # Questions communes
+        
         questions.append("Avez-vous déjà une expérience en pâtisserie ? (Débutant/Intermédiaire/Avancé)")
         questions.append("Quel est votre objectif principal ? (Reconversion professionnelle/Perfectionnement/Passion personnelle)")
 
@@ -724,12 +722,12 @@ Veuillez répondre à cette question pour continuer le processus.
 """
         return qualification_message, False, False
 
-    # Flux en cours
+    
     current_index = session_state["current_question_index"]
     questions = session_state["qualification_questions"]
     current_q_text = questions[current_index]
 
-    # Cas Q1: formation => injecter question de créneaux
+    
     if current_index == 0:
         session_state["formation_choisie"] = question.strip()
         db = get_database_service()
@@ -751,10 +749,10 @@ Veuillez répondre à cette question pour continuer le processus.
             session_state["slot_required"] = False
             questions.insert(1, "Aucun créneau n’est disponible pour cette formation. Souhaitez‑vous une alerte quand un créneau s’ouvre ? (Oui/Non)")
 
-        # Sauvegarder la réponse de la Q1
+        
         session_state["qualification_answers"]["formation"] = session_state["formation_choisie"]
 
-        # Afficher la Q2 (créneaux)
+        
         session_state["current_question_index"] = 1
         next_question = questions[1]
         next_message = f"""
@@ -766,7 +764,7 @@ Veuillez répondre pour continuer.
 """
         return next_message, False, False
 
-    # Cas Q2: validation choix de créneau
+    
     if "Créneaux disponibles pour" in current_q_text:
         user_raw = question.strip().lower()
         if user_raw == "aucun":
@@ -787,29 +785,29 @@ Veuillez répondre pour continuer.
             except ValueError:
                 return "Veuillez répondre par un numéro (ex: 1) ou « aucun ». Réessayez.", False, False
     else:
-        # Stockage générique
+        
         question_key = current_q_text.split(":")[0].lower().replace(" ", "_")
         session_state["qualification_answers"][question_key] = question
 
-        # Analytics: log question answered
+        
         log_analytics_event("question_answered", {
             "question": current_q_text,
             "answer": question,
             "question_index": session_state["current_question_index"]
         })
 
-    # Avancer
+    
     session_state["current_question_index"] += 1
 
-    # Fin du questionnaire ?
+    
     if session_state["current_question_index"] >= len(questions):
-        # Évaluation finale
+        
         statut, score, justification = evaluate_qualification_score(
             client_info,
             session_state["qualification_answers"]
         )
 
-        # Refus si créneau requis non choisi
+        
         if session_state.get("refuse_no_slot", False):
             statut = "REFUSÉ"
             justification += (
@@ -825,7 +823,7 @@ Veuillez répondre pour continuer.
 
         availability = db_service.get_formation_availability(formation_interesse)
 
-        # Si non disponible → alternatives
+        
         if not availability["disponible"]:
             alternatives = db_service.get_alternative_formations(formation_interesse)
             session_label = ""
@@ -856,7 +854,7 @@ La formation "{formation_interesse}" n'est pas disponible actuellement.
 """
             db_service.disconnect()
 
-            # Reset état
+            
             session_state["qualification_in_progress"] = False
             session_state["qualification_questions"] = []
             session_state["qualification_answers"] = []
@@ -866,13 +864,13 @@ La formation "{formation_interesse}" n'est pas disponible actuellement.
             session_state["slot_required"] = False
             session_state["refuse_no_slot"] = False
 
-            # Analytics fin (non disponible)
+            
             log_analytics_event("completion", {"status": statut, "score": score, "formation": formation_interesse, "session_chosen": session_label})
             end_analytics_tracking("completed", statut)
 
             return message_final, True, True
 
-        # Réservation si qualifié
+        
         if statut == "QUALIFIÉ":
             reservation_success = db_service.reserve_place(
                 availability["formation_id"],
@@ -921,7 +919,7 @@ Cela peut arriver si la formation s'est remplie entre temps.
 
         db_service.disconnect()
 
-        # Reset état global
+        
         sessions_options = session_state.get("sessions_options", [])
         chosen = None
         if session_state.get("selected_session_id"):
@@ -936,7 +934,7 @@ Cela peut arriver si la formation s'est remplie entre temps.
         session_state["slot_required"] = False
         session_state["refuse_no_slot"] = False
 
-        # Email + analytics
+        
         chosen_str = _format_session(chosen) if chosen else "Non précisé"
         formation_details = (
             f"Formation demandée: {formation_interesse}\n"
@@ -966,7 +964,7 @@ Cela peut arriver si la formation s'est remplie entre temps.
 
         return message_final, True, True
 
-    # Continuer le questionnaire
+    
     idx = session_state["current_question_index"]
     if idx >= len(questions):
         return "Merci, vos réponses sont complètes. Notre équipe vous recontactera rapidement.", True, True

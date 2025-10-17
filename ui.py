@@ -11,7 +11,7 @@ from llm import getStreamingChain, get_fallback_answer, process_qualification_fl
 EMBEDDING_MODEL = "nomic-embed-text"
 PATH = "Research"
 
-# Configuration de la page
+
 st.set_page_config(
     page_title="Dream Pastry - Assistant Formation",
     page_icon="🧁",
@@ -19,7 +19,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Styles CSS personnalisés
+
 st.markdown("""
 <style>
     /* Styles généraux */
@@ -182,7 +182,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# En-tête principal
+
 st.markdown("""
 <div class="main-header fade-in">
     <h1>🧁 Dream Pastry</h1>
@@ -190,21 +190,21 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Onglets pour l'interface
+
 tab1, tab2 = st.tabs(["💬 Chat & Qualification", "📊 Analytics"])
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Formulaire de qualification client
+
 if "client_info" not in st.session_state:
     st.session_state["client_info"] = None
 
-# Mode de l'application
-if "app_mode" not in st.session_state:
-    st.session_state["app_mode"] = "chat"  # "chat" ou "qualification"
 
-# Charge les documents UNE FOIS par session (cache mémoire)
+if "app_mode" not in st.session_state:
+    st.session_state["app_mode"] = "chat"  
+
+
 if "documents_loaded" not in st.session_state:
     with st.spinner("Chargement des documents..."):
         try:
@@ -214,7 +214,7 @@ if "documents_loaded" not in st.session_state:
         except Exception as e:
             st.error(f"❌ Erreur lors du chargement des documents: {str(e)}")
 
-# ===== ONGLET 1: CHAT & QUALIFICATION =====
+
 with tab1:
     if st.session_state["client_info"] is None:
         st.markdown("""
@@ -229,7 +229,7 @@ with tab1:
         """, unsafe_allow_html=True)
         
         with st.form("formulaire_qualification"):
-            # Section informations personnelles
+            
             st.markdown("""
             <div class="form-section">
                 <h3>👤 Informations Personnelles</h3>
@@ -246,7 +246,7 @@ with tab1:
                 numero_telephone = st.text_input("Numéro de téléphone *", placeholder="0123456789")
                 ville = st.text_input("Ville", placeholder="Votre ville")
             
-            # Section professionnelle
+            
             st.markdown("""
             <div class="form-section">
                 <h3>💼 Situation Professionnelle</h3>
@@ -267,7 +267,7 @@ with tab1:
                 budget = st.number_input("Budget disponible (€) *", min_value=100, value=1000,
                                        help="Budget que vous pouvez consacrer à la formation")
             
-            # Section motivation
+            
             st.markdown("""
             <div class="form-section">
                 <h3>🎯 Motivation & Objectifs</h3>
@@ -278,7 +278,7 @@ with tab1:
                                     placeholder="Décrivez vos motivations et objectifs...",
                                     height=100)
             
-            # Bouton de soumission stylisé
+            
             st.markdown("<br>", unsafe_allow_html=True)
             col1, col2, col3 = st.columns([1, 2, 1])
             with col2:
@@ -293,7 +293,7 @@ with tab1:
             """, unsafe_allow_html=True)
 
         if submit:
-            # Validation des champs obligatoires
+            
             if not nom or not prenom or not numero_telephone or not email or not statut or not cpf or not preference or budget < 100:
                 st.error("❌ Veuillez remplir tous les champs obligatoires (marqués d'un *)")
             else:
@@ -319,7 +319,7 @@ with tab1:
                         "motivation": motivation if motivation else "Non renseigné"
                     }
                     
-                    # Message de bienvenue stylisé
+                    
                     st.markdown("""
                     <div style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); 
                                 padding: 1.5rem; border-radius: 15px; margin: 1rem 0; 
@@ -339,7 +339,7 @@ with tab1:
                     st.rerun()
 
     else:
-        # En-tête info stylisé
+        
         client_info = st.session_state["client_info"]
         st.markdown(f"""
         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
@@ -352,7 +352,7 @@ with tab1:
         </div>
         """, unsafe_allow_html=True)
 
-        # Boutons de mode stylisés
+        
         st.markdown("""
         <div style="text-align: center; margin: 2rem 0;">
             <h4 style="color: #667eea; margin-bottom: 1rem;">Choisissez votre mode d'interaction</h4>
@@ -373,9 +373,9 @@ with tab1:
                 st.session_state["app_mode"] = "qualification"
                 st.rerun()
 
-        # Mode Chat
+        
         if st.session_state["app_mode"] == "chat":
-            # En-tête du chat
+            
             st.markdown("""
             <div style="background: #f8f9fa; padding: 1rem; border-radius: 10px; margin: 1rem 0; 
                         border-left: 4px solid #667eea;">
@@ -386,7 +386,7 @@ with tab1:
             </div>
             """, unsafe_allow_html=True)
             
-            # Affiche l'historique avec style personnalisé
+            
             for message in st.session_state.messages:
                 if message["role"] == "user":
                     st.markdown(f"""
@@ -403,10 +403,10 @@ with tab1:
                     </div>
                     """, unsafe_allow_html=True)
 
-            # Saisie utilisateur stylisée
+            
             if prompt := st.chat_input("💬 Posez votre question sur nos formations..."):
                 st.session_state.messages.append({"role": "user", "content": prompt})
-                # Afficher immédiatement le message utilisateur
+                
                 st.markdown(f"""
                 <div class="user-message fade-in">
                     <strong>Vous:</strong><br>
@@ -415,11 +415,11 @@ with tab1:
                 """, unsafe_allow_html=True)
                 st.session_state["pending_user_message"] = prompt
 
-            # Si un message est en attente, on génère exactement UNE FOIS
+            
             if "pending_user_message" in st.session_state:
                 user_msg = st.session_state["pending_user_message"]
                 
-                # Indicateur de chargement stylisé
+                
                 with st.spinner("🧁 L'assistant réfléchit à votre question..."):
                     try:
                         if detect_inscription_intent(user_msg):
@@ -430,12 +430,12 @@ with tab1:
                             llm = ChatOllama(model="gemma3:4b")
                             db = st.session_state.get("vectorstore")
 
-                            # Fallback rapide si connu
+                            
                             fallback_answer = get_fallback_answer(user_msg)
                             if fallback_answer:
                                 response = fallback_answer
                             else:
-                                # Streaming contrôlé via placeholder
+                                
                                 chain = getStreamingChain(user_msg, st.session_state.messages, llm, db)
                                 response = ""
                                 placeholder = st.empty()
@@ -451,7 +451,7 @@ with tab1:
                                     </div>
                                     """, unsafe_allow_html=True)
                                 
-                                # Affichage final stylisé
+                                
                                 placeholder.markdown(f"""
                                 <div class="assistant-message fade-in">
                                     <strong>🧁 Assistant Dream Pastry:</strong><br>
@@ -470,13 +470,13 @@ with tab1:
                         """, unsafe_allow_html=True)
                         st.session_state.messages.append({"role": "assistant", "content": error_msg})
                 
-                # Dans tous les cas, on supprime le flag pour éviter un double traitement
+                
                 if "pending_user_message" in st.session_state:
                     del st.session_state["pending_user_message"]
 
-        # Mode Qualification
+        
         elif st.session_state["app_mode"] == "qualification":
-            # En-tête de qualification stylisé
+            
             st.markdown("""
             <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
                         padding: 2rem; border-radius: 15px; margin: 1rem 0; text-align: center;">
@@ -490,7 +490,7 @@ with tab1:
             if "qualification_messages" not in st.session_state:
                 st.session_state["qualification_messages"] = []
 
-            # Affiche l'historique de qualification avec style
+            
             for message in st.session_state["qualification_messages"]:
                 if message["role"] == "user":
                     st.markdown(f"""
@@ -507,7 +507,7 @@ with tab1:
                     </div>
                     """, unsafe_allow_html=True)
 
-            # Saisie utilisateur pour qualification stylisée
+            
             if prompt := st.chat_input("💬 Répondez à la question..."):
                 st.session_state["qualification_messages"].append({"role": "user", "content": prompt})
                 st.markdown(f"""
@@ -517,7 +517,7 @@ with tab1:
                 </div>
                 """, unsafe_allow_html=True)
 
-                # Indicateur de traitement stylisé
+                
                 with st.spinner("🎯 Évaluation de votre réponse en cours..."):
                     try:
                         final_response, email_sent, qualification_completee = process_qualification_flow(
@@ -527,7 +527,7 @@ with tab1:
                             st.session_state,
                         )
                         
-                        # Affichage de la réponse stylisé
+                        
                         st.markdown(f"""
                         <div class="assistant-message fade-in">
                             <strong>🎯 Évaluateur Dream Pastry:</strong><br>
@@ -537,7 +537,7 @@ with tab1:
                         
                         st.session_state["qualification_messages"].append({"role": "assistant", "content": final_response})
 
-                        # Messages de statut stylisés
+                        
                         if email_sent:
                             if "QUALIFIÉ" in final_response:
                                 st.markdown("""
@@ -592,7 +592,7 @@ with tab1:
 
 # ===== ONGLET 2: DASHBOARD ANALYTICS =====
 with tab2:
-    # En-tête du dashboard stylisé
+    
     st.markdown("""
     <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
                 padding: 2rem; border-radius: 15px; margin: 1rem 0; text-align: center;">
@@ -603,7 +603,7 @@ with tab2:
     </div>
     """, unsafe_allow_html=True)
     
-    # Sélecteur de période stylisé
+    
     st.markdown("""
     <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; margin: 1rem 0; 
                 border-left: 4px solid #667eea;">
@@ -629,7 +629,7 @@ with tab2:
             db.disconnect()
             
             if metrics and any(metrics.values()):
-                # En-tête des métriques
+                
                 st.markdown("""
                 <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; margin: 2rem 0; 
                             border-left: 4px solid #667eea;">
@@ -637,7 +637,7 @@ with tab2:
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # Métriques principales stylisées
+                
                 col1, col2, col3, col4 = st.columns(4)
                 
                 with col1:
@@ -680,7 +680,7 @@ with tab2:
                     </div>
                     """, unsafe_allow_html=True)
                 
-                # Détails des métriques stylisés
+              
                 st.markdown("""
                 <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; margin: 2rem 0; 
                             border-left: 4px solid #667eea;">
@@ -725,7 +725,7 @@ with tab2:
                     completion_rate = metrics.get('completion_rate', 0) or 0
                     qual_rate = metrics.get('qualification_rate', 0) or 0
                     
-                    # Recommandations pour le taux de complétion
+                    
                     if completion_rate < 50:
                         st.markdown("""
                         <div style="background: #fff3cd; color: #856404; padding: 1rem; 
@@ -751,7 +751,7 @@ with tab2:
                         </div>
                         """, unsafe_allow_html=True)
                     
-                    # Recommandations pour le taux de qualification
+                   
                     if qual_rate < 30:
                         st.markdown("""
                         <div style="background: #fff3cd; color: #856404; padding: 1rem; 
@@ -777,7 +777,7 @@ with tab2:
                         </div>
                         """, unsafe_allow_html=True)
                 
-                # Top questions non répondues
+               
                 st.markdown("---")
                 st.subheader("❓ Top Questions Non Répondues")
                 
@@ -791,20 +791,20 @@ with tab2:
                             st.write(f"**Fréquence:** {q['frequency']} fois")
                             st.write(f"**Dernière fois:** {q['last_seen']}")
                             
-                            # Bouton pour ajouter à la FAQ (simulation)
+                            
                             if st.button(f"📝 Ajouter à la FAQ", key=f"add_faq_{i}"):
                                 st.success("✅ Question ajoutée à la liste d'amélioration de la FAQ")
                 else:
                     st.info("🎉 Aucune question non répondue récurrente !")
                 
-                # Graphiques (simulation avec des données de base)
+               
                 st.markdown("---")
                 st.subheader("📈 Évolution des métriques")
                 
                 import pandas as pd
                 import numpy as np
                 
-                # Simulation de données historiques
+                
                 dates = pd.date_range(end='today', periods=days, freq='D')
                 total_sessions = metrics.get('total_sessions', 0) or 0
                 data = {

@@ -5,7 +5,7 @@ from database_config import get_database_config
 import logging
 import json
 
-# Configuration du logging
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -279,7 +279,7 @@ class DatabaseService:
         try:
             cursor = self.connection.cursor()
             
-            # Vérifier qu'il reste des places
+            
             cursor.execute("""
                 SELECT places_max, places_reservees 
                 FROM formations 
@@ -290,7 +290,7 @@ class DatabaseService:
             if not result or result[1] >= result[0]:
                 return False
             
-            # Insérer l'inscription
+            
             cursor.execute("""
                 INSERT INTO inscriptions 
                 (client_nom, client_prenom, client_email, client_telephone, 
@@ -306,7 +306,7 @@ class DatabaseService:
                 score
             ))
             
-            # Mettre à jour le nombre de places réservées
+            
             cursor.execute("""
                 UPDATE formations 
                 SET places_reservees = places_reservees + 1
@@ -330,7 +330,7 @@ class DatabaseService:
         try:
             cursor = self.connection.cursor()
             
-            # Insérer des formations d'exemple
+            
             formations = [
                 ("Pâtisserie Française", "Formation complète en pâtisserie française", 15, 5, 1200.00, 5),
                 ("Macarons", "Formation spécialisée macarons", 8, 2, 450.00, 2),
@@ -356,7 +356,7 @@ class DatabaseService:
             if cursor:
                 cursor.close()
 
-    # ===== MÉTHODES POUR ANALYTICS & BOUCLE D'AMÉLIORATION =====
+    
     
     def start_analytics_session(self, session_id: str, client_info: dict = None) -> bool:
         """Démarre une session de tracking analytics"""
@@ -440,7 +440,7 @@ class DatabaseService:
         try:
             cursor = self.connection.cursor(dictionary=True)
             
-            # Taux de complétion
+           
             cursor.execute("""
                 SELECT 
                     COUNT(*) as total_sessions,
@@ -451,7 +451,7 @@ class DatabaseService:
             """, (days,))
             completion_metrics = cursor.fetchone()
 
-            # Pourcentage de qualifiés
+            
             cursor.execute("""
                 SELECT 
                     COUNT(*) as total_completed,
@@ -463,7 +463,7 @@ class DatabaseService:
             """, (days,))
             qualification_metrics = cursor.fetchone()
 
-            # Temps médian (approximation avec AVG pour MariaDB/MySQL)
+            
             cursor.execute("""
                 SELECT 
                     AVG(duration_seconds) as avg_duration_seconds,
@@ -475,7 +475,7 @@ class DatabaseService:
             """, (days,))
             duration_metrics = cursor.fetchone()
 
-            # Top questions non répondues
+           
             cursor.execute("""
                 SELECT question_text, frequency, last_seen
                 FROM unanswered_questions 
@@ -485,7 +485,7 @@ class DatabaseService:
             """)
             unanswered_questions = cursor.fetchall()
 
-            # Gérer les valeurs None pour éviter les erreurs de division
+           
             avg_seconds = duration_metrics.get('avg_duration_seconds') or 0
             median_seconds = duration_metrics.get('median_duration_seconds') or 0
             
