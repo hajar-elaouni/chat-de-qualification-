@@ -1,0 +1,56 @@
+{
+  "informations_generales": {
+    "nombre_formations": 19,
+    "formations_disponibles": [
+      "Formation Bento & Cupcakes",
+      "Formation Cookies",
+      "CAP Blanc",
+      "Formation Entremet",
+      "Formation Tablette chocolat Dubai",
+      "Formation Trompe-l’œil",
+      "Formation Plateau de mignardises",
+      "Entraînement CAP Pâtissier",
+      "Formation Tartelettes signature",
+      "Formation Fraisier ou Framboisier",
+      "Formation Viennoiseries",
+      "Formation Layersweet",
+      "Formation Wedding Cake",
+      "Formation Macarons",
+      "Formation Layercake",
+      "Formation Pâtisserie française",
+      "Formation Cake Design",
+      "Macarons en ligne (cours à distance)",
+      "Formation Layercake en ligne",
+      "CAP Pâtissier à distance"
+    ]
+  },
+  "categories": {
+    "formations_presentiel": [
+      "Formation Bento & Cupcakes",
+      "Formation Cookies",
+      "CAP Blanc",
+      "Formation Entremet",
+      "Formation Tablette chocolat Dubai",
+      "Formation Trompe-l’œil",
+      "Formation Plateau de mignardises",
+      "Entraînement CAP Pâtissier",
+      "Formation Tartelettes signature",
+      "Formation Fraisier ou Framboisier",
+      "Formation Viennoiseries",
+      "Formation Layersweet",
+      "Formation Wedding Cake",
+      "Formation Macarons",
+      "Formation Layercake",
+      "Formation Pâtisserie française",
+      "Formation Cake Design"
+    ],
+    "formations_distance": [
+      "Macarons en ligne (cours à distance)",
+      "Formation Layercake en ligne",
+      "CAP Pâtissier à distance"
+    ]
+  },
+  "financement": {
+    "cpf": "Certaines formations sont finançables via le CPF. Pour les formations non éligibles, Dream Pastry précise : pas de promesse sur financement CPF. Possibilités de prise en charge selon les conditions OPCO ou autres dispositifs. Plus d’infos : www.dream-pastry.fr/financement"
+  }
+}
