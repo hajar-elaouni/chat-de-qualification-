@@ -1,7 +1,7 @@
 ## 📋 Étapes pour utiliser le projet Dream Pastry (Version corrigée)
 
 ### 1. **Prérequis**
-- Python 3.8+ installé
+- Python 3.10 installé
 - Ollama installé et configuré
 - MySQL installé 
 - **Clé API Google Gemini** (obligatoire)
@@ -110,4 +110,3 @@ Le projet utilise **deux modèles IA** :
 
 **⚠️ Attention** : Une clé API Gemini valide est **obligatoire** pour que l'application fonctionne correctement, notamment pour les fonctionnalités de qualification des leads.
 
-Merci de m'avoir corrigé ! C'est effectivement un point crucial pour les utilisateurs.
